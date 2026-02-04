@@ -5,17 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Be My Valentine?</title>
     <style>
-        body { background-color: #fce4ec; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; overflow: hidden; text-align: center; }
-        .card { background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 85%; max-width: 350px; position: relative; z-index: 1; }
-        .btn-container { display: flex; flex-direction: column; align-items: center; gap: 30px; margin-top: 25px; }
-        
-        #yesBtn { background-color: #e91e63; color: white; border: none; padding: 15px 60px; font-size: 1.2rem; border-radius: 12px; font-weight: bold; transition: transform 0.2s ease; cursor: pointer; position: relative; z-index: 10; }
-        
-        #noBtn { background-color: #f5f5f5; color: #888; border: none; padding: 12px 35px; border-radius: 8px; transition: 0.1s; position: relative; cursor: pointer; z-index: 5; }
-        
+        body { background-color: #fce4ec; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; overflow: hidden; text-align: center; touch-action: manipulation; }
+        .card { background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 85%; max-width: 350px; }
+        .btn-container { display: flex; flex-direction: column; align-items: center; gap: 35px; margin-top: 25px; }
+        #yesBtn { background-color: #e91e63; color: white; border: none; padding: 15px 60px; font-size: 1.2rem; border-radius: 12px; font-weight: bold; transition: transform 0.2s ease; position: relative; z-index: 10; }
+        #noBtn { background-color: #f5f5f5; color: #888; border: none; padding: 12px 35px; border-radius: 8px; position: relative; z-index: 5; }
         #message { margin-top: 20px; color: #ff4081; font-weight: 800; font-size: 1.2rem; min-height: 30px; }
         .hidden { display: none; }
-        img { width: 100%; border-radius: 10px; margin-top: 15px; }
+        img { width: 100% !important; border-radius: 10px; margin-top: 15px; display: block; }
     </style>
 </head>
 <body>
@@ -38,40 +35,37 @@
     <script>
         const phrases = ["Nice try! 😜", "You can't escape! ❤️", "Just say Yes! ✨", "No is not an option! 😈", "Click the big one! 😂"];
         let scale = 1;
+        let lastMoveTime = 0;
 
         function moveNo(event) {
-            // This prevents the "Ghost Click" on mobile
-            if (event) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
+            // Stop the touch from reaching anything else
+            event.preventDefault();
+            event.stopPropagation();
+            
+            // Record the time of this move to block "Yes" briefly
+            lastMoveTime = Date.now();
 
             const noBtn = document.getElementById('noBtn');
             const yesBtn = document.getElementById('yesBtn');
             const msg = document.getElementById('message');
 
-            // 1. Show funny message
             msg.innerText = phrases[Math.floor(Math.random() * phrases.length)];
-
-            // 2. Make the "Yes" button grow
             scale += 0.35;
             yesBtn.style.transform = `scale(${scale})`;
 
-            // 3. Move "No" button to a random spot
-            // We calculate based on screen size minus button size
+            // Move No button to a spot away from the finger
             const maxX = window.innerWidth - noBtn.offsetWidth;
             const maxY = window.innerHeight - noBtn.offsetHeight;
-
-            const randomX = Math.floor(Math.random() * maxX);
-            const randomY = Math.floor(Math.random() * maxY);
-
             noBtn.style.position = 'fixed';
-            noBtn.style.left = randomX + 'px';
-            noBtn.style.top = randomY + 'px';
+            noBtn.style.left = Math.floor(Math.random() * maxX) + 'px';
+            noBtn.style.top = Math.floor(Math.random() * maxY) + 'px';
         }
 
         function showSuccess() {
-            document.getElementById('askSection').classList.add('hidden');
+            // If the No button was moved less than 400ms ago, ignore this click
+            if (Date.now() - lastMoveTime < 400) return;
+
+            document.getElementById('askSection').style.display = 'none';
             document.getElementById('successSection').classList.remove('hidden');
         }
     </script>
