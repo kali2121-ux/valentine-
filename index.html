@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will you be my Valentine?</title>
+    <style>
+        body {
+            background-color: #fce4ec;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        .card {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+        }
+
+        h1 { color: #444; font-size: 1.8rem; margin-bottom: 2rem; }
+        
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        #yesBtn {
+            background-color: #e91e63;
+            color: white;
+            border: none;
+            padding: 15px 50px;
+            font-size: 1.2rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            font-weight: bold;
+            width: 200px;
+        }
+
+        #noBtn {
+            background-color: #eeeeee;
+            color: #666;
+            border: none;
+            padding: 10px 30px;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        #message {
+            margin-top: 15px;
+            color: #ff4081;
+            font-style: italic;
+            height: 20px;
+        }
+
+        .hidden { display: none; }
+        
+        img { width: 100%; border-radius: 10px; margin-top: 15px; }
+
+        .cat-emoji { font-size: 3rem; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="card" id="mainCard">
+        <div id="askSection">
+            <div class="cat-emoji">🐱</div>
+            <h1 id="question">krituu, will you be my valentine?</h1>
+            <div class="btn-container">
+                <button id="yesBtn" onclick="showSuccess()">Yes 💖</button>
+                <button id="noBtn" onmouseover="moveNo()" onclick="moveNo()">No 🙈</button>
+            </div>
+            <p id="message"></p>
+        </div>
+
+        <div id="successSection" class="hidden">
+            <h1 style="color: #e91e63;">It's a date then!</h1>
+            <p>Knew you'd say yes</p>
+            <img src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" alt="celebration">
+        </div>
+    </div>
+
+    <script>
+        const phrases = [
+            "Haha, nice try! 😜",
+            "You can't escape love! ❤️",
+            "Just say Yes already! ✨",
+            "No seems a bit shy 😈",
+            "Error 404: No not found"
+        ];
+
+        function moveNo() {
+            const btn = document.getElementById('noBtn');
+            const msg = document.getElementById('message');
+            
+            // Random message
+            msg.innerText = phrases[Math.floor(Math.random() * phrases.length)];
+
+            // Screen boundaries
+            const x = Math.random() * (window.innerWidth - btn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - btn.offsetHeight);
+
+            // Move the button
+            btn.style.position = 'fixed';
+            btn.style.left = x + 'px';
+            btn.style.top = y + 'px';
+        }
+
+        function showSuccess() {
+            document.getElementById('askSection').classList.add('hidden');
+            document.getElementById('successSection').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
